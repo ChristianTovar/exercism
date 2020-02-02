@@ -18,7 +18,6 @@ defmodule Pangram do
     |> String.replace(~r/[^a-zA-Z]/, "")
     |> String.graphemes()
     |> Enum.frequencies()
-    |> IO.inspect()
     |> all_letters?()
   end
 
