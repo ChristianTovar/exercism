@@ -1,1 +1,2 @@
+# Ignore folders created by the dyalizer
 */.elixir_ls/
