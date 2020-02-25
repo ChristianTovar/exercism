@@ -19,7 +19,7 @@ defmodule Sublist do
 
   defp is_inside?(_a, [], _type, _size), do: :unequal
 
-  defp is_inside?(a, [_hb | tb] = b, type, size) do
+  defp is_inside?(a, [_hb | tb] = b, type, size) when length(a) <= length(b) do
     case Enum.take(b, size) do
       [] ->
         :unequal
@@ -31,4 +31,6 @@ defmodule Sublist do
         is_inside?(a, tb, type, size)
     end
   end
+
+  defp is_inside?(_a, _b, _type, _size), do: :unequal
 end
