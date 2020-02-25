@@ -12,16 +12,23 @@ defmodule Sublist do
     size_b = length(b)
 
     cond do
-      size_a < size_b or size_a == size_b -> is_inside?(a, b, :sublist, size_a - 1, 0)
-      size_a > size_b -> is_inside?(b, a, :superlist, size_b - 1, 0)
+      size_a < size_b or size_a == size_b -> is_inside?(a, b, :sublist, size_a)
+      size_a > size_b -> is_inside?(b, a, :superlist, size_b)
     end
   end
 
-  defp is_inside?(a, b, type, size, acc) do
-    case Enum.slice(b, acc..(size + acc)) do
-      [] -> :unequal
-      ^a -> type
-      _different -> is_inside?(a, b, type, size, acc + 1)
+  defp is_inside?(_a, [], _type, _size), do: :unequal
+
+  defp is_inside?(a, [_hb | tb] = b, type, size) do
+    case Enum.take(b, size) do
+      [] ->
+        :unequal
+
+      ^a ->
+        type
+
+      _different ->
+        is_inside?(a, tb, type, size)
     end
   end
 end
