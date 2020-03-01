@@ -14,7 +14,7 @@ defmodule Bob do
   defp asking?(input), do: Regex.match?(~r/^.+\?\s*$/, input)
 
   defp shouting?(input) do
-    formated_input = String.replace(input, ~r/[^a-zA-Z]/, "")
-    Regex.match?(~r/^[A-Z]+$/, formated_input)
+    formated_input = String.replace(input, ~r/[^\p{L}]/u, "")
+    Regex.match?(~r/^\p{Lu}+$/u, formated_input)
   end
 end
