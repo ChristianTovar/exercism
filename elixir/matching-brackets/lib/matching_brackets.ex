@@ -10,7 +10,7 @@ defmodule MatchingBrackets do
     |> String.replace(~r/[^(){}\[\]]/, "")
     |> String.graphemes()
     |> Enum.reduce([], fn value, acc -> stack(value, acc) end)
-    |> is_balanced?()
+    |> balanced?()
   end
 
   defp stack(value, acc) when value in ["(", "[", ""] do
@@ -33,6 +33,6 @@ defmodule MatchingBrackets do
     [value | acc]
   end
 
-  defp is_balanced?([]), do: true
-  defp is_balanced?(_), do: false
+  defp balanced?([]), do: true
+  defp balanced?(_), do: false
 end
