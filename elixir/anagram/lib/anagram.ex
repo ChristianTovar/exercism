@@ -24,7 +24,5 @@ defmodule Anagram do
     base_map == candidate_map
   end
 
-  defp repeated?(base, candidate) do
-    String.downcase(base) == String.downcase(candidate)
-  end
+  defp repeated?(base, candidate), do: String.downcase(base) == String.downcase(candidate)
 end
