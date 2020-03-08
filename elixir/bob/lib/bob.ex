@@ -18,7 +18,9 @@ defmodule Bob do
   end
 
   defp shouting?(input) do
-    formated_input = String.replace(input, ~r/[^\p{L}]/u, "")
-    Regex.match?(~r/^\p{Lu}+$/u, formated_input)
+    case Regex.match?(~r/[\p{L}]/u, input) do
+      true -> input == String.upcase(input)
+      false -> false
+    end
   end
 end
