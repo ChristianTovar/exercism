@@ -18,7 +18,7 @@ defmodule Bob do
   end
 
   defp shouting?(input) do
-    case Regex.match?(~r/[\p{L}]/u, input) do
+    case String.upcase(input) != String.downcase(input) do
       true -> input == String.upcase(input)
       false -> false
     end
