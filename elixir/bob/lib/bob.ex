@@ -9,9 +9,13 @@ defmodule Bob do
     end
   end
 
-  defp silence?(input), do: Regex.match?(~r/^\s*$/, input)
+  defp silence?(input), do: String.trim(input) == ""
 
-  defp asking?(input), do: Regex.match?(~r/^.+\?\s*$/, input)
+  defp asking?(input) do
+    input
+    |> String.trim()
+    |> String.ends_with?("?")
+  end
 
   defp shouting?(input) do
     formated_input = String.replace(input, ~r/[^\p{L}]/u, "")
