@@ -27,9 +27,7 @@ defmodule Phone do
     with false <- Regex.match?(~r/[a-z]/, raw) do
       raw
       |> remove_characters()
-      |> String.graphemes()
-      |> remove_country_code()
-      |> check_area_code()
+      |> check_number_format()
     else
       true -> "0000000000"
     end
@@ -37,21 +35,9 @@ defmodule Phone do
 
   defp remove_characters(number), do: String.replace(number, ~r/[^0-9]/, "")
 
-  defp remove_country_code([code | tail] = number) when length(number) == 11 and code == "1",
-    do: Enum.join(tail)
-
-  defp remove_country_code([code | _tail] = number) when length(number) == 11 and code != "1",
-    do: "0000000000"
-
-  defp remove_country_code(number) when length(number) < 10,
-    do: "0000000000"
-
-  defp remove_country_code(number), do: Enum.join(number)
-
-  defp check_area_code(number) do
-    case Regex.match?(~r/^[2-9]\d{9}$/, number) do
+  defp check_number_format(number) do
+    case Regex.match?(~r/^1?[2-9][0-9]{2}[2-9][0-9]{6}$/, number) do
       true -> number
-
       false -> "0000000000"
     end
   end
