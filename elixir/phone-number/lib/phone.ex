@@ -24,14 +24,17 @@ defmodule Phone do
   """
   @spec number(String.t()) :: String.t()
   def number(raw) do
-    with false <- Regex.match?(~r/[a-z]/, raw) do
+    with true <- characters_free?(raw) do
       raw
       |> remove_characters()
       |> check_number_format()
+      |> remove_country_code()
     else
-      true -> "0000000000"
+      false -> "0000000000"
     end
   end
+
+  defp characters_free?(number), do: !Regex.match?(~r/[a-z]/, number)
 
   defp remove_characters(number), do: String.replace(number, ~r/[^0-9]/, "")
 
@@ -39,6 +42,13 @@ defmodule Phone do
     case Regex.match?(~r/^1?[2-9][0-9]{2}[2-9][0-9]{6}$/, number) do
       true -> number
       false -> "0000000000"
+    end
+  end
+
+  defp remove_country_code(number) do
+    case String.starts_with?(number, "1") do
+      true -> String.slice(number, 1..-1)
+      false -> number
     end
   end
 
