@@ -49,22 +49,18 @@ defmodule PhoneTest do
     assert Phone.number("2120550100") == "0000000000"
   end
 
-  @tag :pending
   test "area code" do
     assert Phone.area_code("2125550100") == "212"
   end
 
-  @tag :pending
   test "area code with full US phone number" do
     assert Phone.area_code("12125550100") == "212"
   end
 
-  @tag :pending
   test "invalid area code" do
     assert Phone.area_code("(100) 555-1234") == "000"
   end
 
-  @tag :pending
   test "no area code" do
     assert Phone.area_code("867.5309") == "000"
   end

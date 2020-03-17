@@ -34,24 +34,6 @@ defmodule Phone do
     end
   end
 
-  defp characters_free?(number), do: !Regex.match?(~r/[a-z]/, number)
-
-  defp remove_characters(number), do: String.replace(number, ~r/[^0-9]/, "")
-
-  defp check_number_format(number) do
-    case Regex.match?(~r/^1?[2-9][0-9]{2}[2-9][0-9]{6}$/, number) do
-      true -> number
-      false -> "0000000000"
-    end
-  end
-
-  defp remove_country_code(number) do
-    case String.starts_with?(number, "1") do
-      true -> String.slice(number, 1..-1)
-      false -> number
-    end
-  end
-
   @doc """
   Extract the area code from a phone number
 
@@ -74,6 +56,15 @@ defmodule Phone do
   """
   @spec area_code(String.t()) :: String.t()
   def area_code(raw) do
+    with true <- characters_free?(raw) do
+      raw
+      |> remove_characters()
+      |> remove_country_code()
+      |> check_number_format()
+      |> extract_area_code()
+    else
+      false -> "000"
+    end
   end
 
   @doc """
@@ -99,4 +90,24 @@ defmodule Phone do
   @spec pretty(String.t()) :: String.t()
   def pretty(raw) do
   end
+
+  defp characters_free?(number), do: !Regex.match?(~r/[a-z]/, number)
+
+  defp remove_characters(number), do: String.replace(number, ~r/[^0-9]/, "")
+
+  defp check_number_format(number) do
+    case Regex.match?(~r/^1?[2-9][0-9]{2}[2-9][0-9]{6}$/, number) do
+      true -> number
+      false -> "0000000000"
+    end
+  end
+
+  defp remove_country_code(number) do
+    case String.starts_with?(number, "1") do
+      true -> String.slice(number, 1..-1)
+      false -> number
+    end
+  end
+
+  defp extract_area_code(number), do: String.slice(number, 0..2)
 end
