@@ -89,6 +89,15 @@ defmodule Phone do
   """
   @spec pretty(String.t()) :: String.t()
   def pretty(raw) do
+    with true <- characters_free?(raw) do
+      raw
+      |> remove_characters()
+      |> check_number_format()
+      |> remove_country_code()
+      |> print()
+    else
+      false -> "0000000000"
+    end
   end
 
   defp characters_free?(number), do: !Regex.match?(~r/[a-z]/, number)
@@ -110,4 +119,11 @@ defmodule Phone do
   end
 
   defp extract_area_code(number), do: String.slice(number, 0..2)
+
+  defp print(number) do
+    %{"area" => area, "first_local" => first_local, "second_local" => second_local} =
+      Regex.named_captures(~r/(?<area>\d{3})(?<first_local>\d{3})(?<second_local>\d{4})/, number)
+
+    "(#{area}) #{first_local}-#{second_local}"
+  end
 end

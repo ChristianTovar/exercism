@@ -65,22 +65,18 @@ defmodule PhoneTest do
     assert Phone.area_code("867.5309") == "000"
   end
 
-  @tag :pending
   test "pretty print" do
     assert Phone.pretty("2125550100") == "(212) 555-0100"
   end
 
-  @tag :pending
   test "pretty print with full US phone number" do
     assert Phone.pretty("+1 (303) 555-1212") == "(303) 555-1212"
   end
 
-  @tag :pending
   test "pretty print invalid US phone number" do
     assert Phone.pretty("212-155-0100") == "(000) 000-0000"
   end
 
-  @tag :pending
   test "pretty print invalid, short US phone number" do
     assert Phone.pretty("867.5309") == "(000) 000-0000"
   end
