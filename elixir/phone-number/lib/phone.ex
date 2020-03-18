@@ -56,15 +56,11 @@ defmodule Phone do
   """
   @spec area_code(String.t()) :: String.t()
   def area_code(raw) do
-    with true <- characters_free?(raw) do
-      raw
-      |> remove_characters()
-      |> remove_country_code()
-      |> check_number_format()
-      |> extract_area_code()
-    else
-      false -> "000"
-    end
+    raw
+    |> remove_characters()
+    |> remove_country_code()
+    |> check_number_format()
+    |> extract_area_code()
   end
 
   @doc """
@@ -89,15 +85,11 @@ defmodule Phone do
   """
   @spec pretty(String.t()) :: String.t()
   def pretty(raw) do
-    with true <- characters_free?(raw) do
-      raw
-      |> remove_characters()
-      |> check_number_format()
-      |> remove_country_code()
-      |> print()
-    else
-      false -> "0000000000"
-    end
+    raw
+    |> remove_characters()
+    |> check_number_format()
+    |> remove_country_code()
+    |> print()
   end
 
   defp characters_free?(number), do: !Regex.match?(~r/[a-z]/, number)
