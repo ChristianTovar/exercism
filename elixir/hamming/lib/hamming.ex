@@ -26,7 +26,6 @@ defmodule Hamming do
     |> Enum.filter(fn {key, _value} -> key == :del end)
     |> Enum.map(fn {_key, value} -> value end)
     |> Enum.join()
-    |> String.graphemes()
-    |> Enum.count()
+    |> String.length()
   end
 end
