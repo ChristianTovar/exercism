@@ -11,12 +11,9 @@ defmodule Hamming do
   def hamming_distance(strand1, strand1), do: {:ok, 0}
 
   def hamming_distance(strand1, strand2) when length(strand1) == length(strand2) do
-    string1 = to_string(strand1)
-    string2 = to_string(strand2)
-
     amount =
-      string1
-      |> String.myers_difference(string2)
+      strand1
+      |> List.myers_difference(strand2)
       |> get_difference()
 
     {:ok, amount}
