@@ -11,21 +11,16 @@ defmodule Hamming do
   def hamming_distance(strand1, strand1), do: {:ok, 0}
 
   def hamming_distance(strand1, strand2) when length(strand1) == length(strand2) do
-    amount =
-      strand1
-      |> List.myers_difference(strand2)
-      |> get_difference()
-
-    {:ok, amount}
+    get_difference(strand1, strand2, 0)
   end
 
   def hamming_distance(_, _), do: {:error, "Lists must be the same length"}
 
-  defp get_difference(keyword) do
-    keyword
-    |> Enum.filter(fn {key, _value} -> key == :del end)
-    |> Enum.map(fn {_key, value} -> value end)
-    |> Enum.join()
-    |> String.length()
-  end
+  defp get_difference([], [], acc), do: {:ok, acc}
+
+  defp get_difference([head_1 | tail_1], [head_2 | tail_2], acc) when head_1 != head_2,
+    do: get_difference(tail_1, tail_2, acc + 1)
+
+  defp get_difference([_head_1 | tail_1], [_head_2 | tail_2], acc),
+    do: get_difference(tail_1, tail_2, acc)
 end
