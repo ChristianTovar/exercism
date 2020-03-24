@@ -30,9 +30,9 @@ defmodule BinarySearch do
     mid = div(left + right, 2)
 
     cond do
-      elem(numbers, mid) == key -> {:ok, mid}
+      key == elem(numbers, mid) -> {:ok, mid}
       key < elem(numbers, mid) -> get_number(numbers, key, left, mid - 1)
-      key >= elem(numbers, mid) -> get_number(numbers, key, mid + 1, right)
+      key > elem(numbers, mid) -> get_number(numbers, key, mid + 1, right)
     end
   end
 end
