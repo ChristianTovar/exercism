@@ -22,9 +22,9 @@ defmodule Hamming do
   defp get_difference([], [_head_1 | _tail_1], _acc),
     do: {:error, "Lists must be the same length"}
 
-  defp get_difference([head_1 | tail_1], [head_2 | tail_2], acc) when head_1 != head_2,
-    do: get_difference(tail_1, tail_2, acc + 1)
+  defp get_difference([head | tail_1], [head | tail_2], acc),
+    do: get_difference(tail_1, tail_2, acc)
 
   defp get_difference([_head_1 | tail_1], [_head_2 | tail_2], acc),
-    do: get_difference(tail_1, tail_2, acc)
+    do: get_difference(tail_1, tail_2, acc + 1)
 end
