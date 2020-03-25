@@ -13,18 +13,23 @@ defmodule IsbnVerifier do
   """
   @spec isbn?(String.t()) :: boolean
   def isbn?(isbn) do
-    case valid_format?(isbn) do
+    formated_isbn = remove_characters(isbn)
+
+    case valid_format?(formated_isbn) do
       false ->
         false
 
       true ->
-        isbn
-        |> remove_characters()
-        |> check_formula_result()
+        check_formula_result(formated_isbn)
     end
   end
 
-  defp valid_format?(isbn), do: Regex.match?(~r/[0-9]-[0-9]{3}-[0-9]{5}-[0-9 | X]/, isbn)
+  defp valid_format?(isbn) do
+    cond do
+      isbn =~ ~r/^[0-9]{9}[0-9 | X]$/ -> true
+      isbn =~ ~r/./ -> false
+    end
+  end
 
   defp remove_characters(isbn), do: String.replace(isbn, "-", "")
 
