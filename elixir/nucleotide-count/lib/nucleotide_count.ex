@@ -24,11 +24,5 @@ defmodule NucleotideCount do
   %{?A => 4, ?T => 1, ?C => 0, ?G => 0}
   """
   @spec histogram(charlist()) :: map()
-  def histogram(strand) do
-    empty_histogram = get_empty_histogram()
-    current_histogram = Enum.frequencies(strand)
-    Map.merge(empty_histogram, current_histogram)
-  end
-
-  defp get_empty_histogram, do: Enum.reduce(@nucleotides, %{}, &Map.put_new(&2, &1, 0))
+  def histogram(strand), do: Map.new(@nucleotides, &{&1, count(strand, &1)})
 end
