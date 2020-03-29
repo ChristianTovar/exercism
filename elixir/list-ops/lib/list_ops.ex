@@ -26,14 +26,18 @@ defmodule ListOps do
   @spec append(list, list) :: list
   def append(a, []), do: a
   def append([], b), do: b
-  def append(a, b), do: reduce(reverse(a), b, &[&1 | &2])
+  def append(a, b), do: concat([a, b])
 
   @spec concat([[any]]) :: [any]
-  def concat(ll), do: reduce(ll, [], &append(&2, &1))
+  def concat(ll), do: do_concat(ll, [])
 
   defp count_elements([], acc), do: acc
   defp count_elements([_h | t], acc), do: count_elements(t, acc + 1)
 
   defp reverse_list([], acc), do: acc
   defp reverse_list([h | t], acc), do: reverse_list(t, [h | acc])
+
+  defp do_concat([], acc), do: reverse(acc)
+  defp do_concat([[] | list], acc), do: do_concat(list, acc)
+  defp do_concat([[h | t] | list], acc), do: do_concat([t | list], [h | acc])
 end
