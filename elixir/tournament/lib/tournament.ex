@@ -33,20 +33,12 @@ defmodule Tournament do
     map
     |> increase_played_matches(team_a)
     |> increase_played_matches(team_b)
-    |> check_match_result(team_a, team_b, result)
+    |> set_match_result(team_a, team_b, result)
   end
 
   defp increase_played_matches(map, team),
     do:
       Map.update(map, team, %Tournament{}, fn %Tournament{mp: mp} = map -> %{map | mp: mp + 1} end)
-
-  defp check_match_result(map, team_a, team_b, result) do
-    cond do
-      result =~ ~r/^w/ -> set_match_result(map, team_a, team_b, "win")
-      result =~ ~r/^l/ -> set_match_result(map, team_a, team_b, "loss")
-      result =~ ~r/^d/ -> set_match_result(map, team_a, team_b, "draw")
-    end
-  end
 
   defp set_match_result(map, team_a, team_b, "win") do
     map
