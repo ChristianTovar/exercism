@@ -11,13 +11,21 @@ defmodule Tournament do
   listing the teams in alphabetical order.
   """
   defstruct mp: 1, w: 0, d: 0, l: 0, p: 0
+  @scoreboard "Team                           | MP |  W |  D |  L |  P\n"
 
   @spec tally(input :: list(String.t())) :: String.t()
   def tally(input) do
     input
-    |> Enum.reduce(%{}, &add_match_results/2)
+    # |> check_format()
+    |> calculate_tournament_results()
     |> print_tournament_result()
   end
+
+  # defp check_format(input) do
+
+  # end
+
+  defp calculate_tournament_results(input), do: Enum.reduce(input, %{}, &add_match_results/2)
 
   defp add_match_results(string, acc) do
     [team_a, team_b, result] = String.split(string, ";")
@@ -70,12 +78,10 @@ defmodule Tournament do
     do: Map.update!(acc, team, fn %Tournament{d: d} = map -> %{map | d: d + 1} end)
 
   defp print_tournament_result(map) do
-    initial_string = "Team                           | MP |  W |  D |  L |  P\n"
-
     map
-    |> Enum.map(&(&1))
+    |> Enum.map(& &1)
     |> Enum.sort_by(fn {_, map} -> map.p end, :desc)
-    |> Enum.reduce(initial_string, fn {team, %{mp: mp, w: w, d: d, l: l, p: p}}, acc ->
+    |> Enum.reduce(@scoreboard, fn {team, %{mp: mp, w: w, d: d, l: l, p: p}}, acc ->
       acc <> "#{team}" <> "#{insert_spaces(team)}" <> "|  #{mp} |  #{w} |  #{d} |  #{l} |  #{p}\n"
     end)
     |> String.trim()
