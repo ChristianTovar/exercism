@@ -16,66 +16,74 @@ defmodule Tournament do
   @spec tally(input :: list(String.t())) :: String.t()
   def tally(input) do
     input
-    # |> check_format()
+    |> check_format()
     |> calculate_tournament_results()
     |> print_tournament_result()
   end
 
-  # defp check_format(input) do
+  defp check_format(input), do: Enum.filter(input, &match_valid_inputs/1)
 
-  # end
+  defp match_valid_inputs(input), do: input =~ ~r/^\w*\s\w*;\w*\s\w*;(win|loss|draw)$/
 
   defp calculate_tournament_results(input), do: Enum.reduce(input, %{}, &add_match_results/2)
 
-  defp add_match_results(string, acc) do
+  defp add_match_results(string, map) do
     [team_a, team_b, result] = String.split(string, ";")
 
-    acc
+    map
     |> increase_played_matches(team_a)
     |> increase_played_matches(team_b)
-    |> set_match_result(team_a, team_b, result)
+    |> check_match_result(team_a, team_b, result)
   end
 
   defp increase_played_matches(map, team),
     do:
       Map.update(map, team, %Tournament{}, fn %Tournament{mp: mp} = map -> %{map | mp: mp + 1} end)
 
-  defp set_match_result(acc, team_a, team_b, "win") do
-    acc
+  defp check_match_result(map, team_a, team_b, result) do
+    cond do
+      result =~ ~r/^w/ -> set_match_result(map, team_a, team_b, "win")
+      result =~ ~r/^l/ -> set_match_result(map, team_a, team_b, "loss")
+      result =~ ~r/^d/ -> set_match_result(map, team_a, team_b, "draw")
+    end
+  end
+
+  defp set_match_result(map, team_a, team_b, "win") do
+    map
     |> increase_winner_points(team_a)
     |> increase_wins(team_a)
     |> increase_losses(team_b)
   end
 
-  defp set_match_result(acc, team_a, team_b, "loss") do
-    acc
+  defp set_match_result(map, team_a, team_b, "loss") do
+    map
     |> increase_winner_points(team_b)
     |> increase_wins(team_b)
     |> increase_losses(team_a)
   end
 
-  defp set_match_result(acc, team_a, team_b, "draw") do
-    acc
+  defp set_match_result(map, team_a, team_b, "draw") do
+    map
     |> increase_drawer_points(team_a)
     |> increase_drawer_points(team_b)
     |> increase_draws(team_a)
     |> increase_draws(team_b)
   end
 
-  defp increase_winner_points(acc, team),
-    do: Map.update!(acc, team, fn %Tournament{p: p} = map -> %{map | p: p + 3} end)
+  defp increase_winner_points(map, team),
+    do: Map.update!(map, team, fn %Tournament{p: p} = map -> %{map | p: p + 3} end)
 
-  defp increase_drawer_points(acc, team),
-    do: Map.update!(acc, team, fn %Tournament{p: p} = map -> %{map | p: p + 1} end)
+  defp increase_drawer_points(map, team),
+    do: Map.update!(map, team, fn %Tournament{p: p} = map -> %{map | p: p + 1} end)
 
-  defp increase_wins(acc, team),
-    do: Map.update!(acc, team, fn %Tournament{w: w} = map -> %{map | w: w + 1} end)
+  defp increase_wins(map, team),
+    do: Map.update!(map, team, fn %Tournament{w: w} = map -> %{map | w: w + 1} end)
 
-  defp increase_losses(acc, team),
-    do: Map.update!(acc, team, fn %Tournament{l: l} = map -> %{map | l: l + 1} end)
+  defp increase_losses(map, team),
+    do: Map.update!(map, team, fn %Tournament{l: l} = map -> %{map | l: l + 1} end)
 
-  defp increase_draws(acc, team),
-    do: Map.update!(acc, team, fn %Tournament{d: d} = map -> %{map | d: d + 1} end)
+  defp increase_draws(map, team),
+    do: Map.update!(map, team, fn %Tournament{d: d} = map -> %{map | d: d + 1} end)
 
   defp print_tournament_result(map) do
     map
