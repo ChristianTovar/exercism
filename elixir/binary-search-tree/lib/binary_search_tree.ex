@@ -14,13 +14,13 @@ defmodule BinarySearchTree do
   def insert(%{data: root, left: nil} = tree, data) when data <= root,
     do: %{tree | left: new(data)}
 
-  def insert(%{data: root, right: nil} = tree, data) when data > root,
+  def insert(%{right: nil} = tree, data),
     do: %{tree | right: new(data)}
 
   def insert(%{data: root} = tree, data) when data <= root,
     do: %{tree | left: insert(tree.left, data)}
 
-  def insert(%{data: root} = tree, data) when data > root,
+  def insert(tree, data),
     do: %{tree | right: insert(tree.right, data)}
 
   @doc """
