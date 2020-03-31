@@ -7,10 +7,7 @@ defmodule Grains do
     do: {:error, "The requested square must be between 1 and 64 (inclusive)"}
 
   def square(number) do
-    result =
-      2
-      |> :math.pow(number - 1)
-      |> trunc()
+    result = get_amount(number)
 
     {:ok, result}
   end
@@ -20,12 +17,14 @@ defmodule Grains do
   """
   @spec total :: {:ok, integer()}
   def total do
-    result =
-      1..64
-      |> Enum.map(&square/1)
-      |> Enum.map(fn {_, value} -> value end)
-      |> Enum.sum()
+    result = Enum.reduce(1..64, 0, &(&2 + get_amount(&1)))
 
     {:ok, result}
+  end
+
+  defp get_amount(number) do
+    2
+    |> :math.pow(number - 1)
+    |> trunc()
   end
 end
