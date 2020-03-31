@@ -48,7 +48,11 @@ defmodule Markdown do
   end
 
   defp parse_list_md_level(l) do
-    t = String.split(String.trim_leading(l, "* "))
+    t =
+      l
+      |> String.trim_leading("* ")
+      |> String.split()
+
     "<li>" <> join_words_with_tags(t) <> "</li>"
   end
 
