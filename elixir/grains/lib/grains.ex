@@ -16,11 +16,7 @@ defmodule Grains do
   Adds square of each number from 1 to 64.
   """
   @spec total :: {:ok, integer()}
-  def total do
-    result = Enum.reduce(1..64, 0, &(&2 + get_amount(&1)))
-
-    {:ok, result}
-  end
+  def total, do: {:ok, get_amount(65) - 1}
 
   defp get_amount(number) do
     2
