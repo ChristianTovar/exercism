@@ -71,7 +71,9 @@ defmodule Markdown do
   end
 
   defp replace_md_with_tag(w) do
-    replace_suffix_md(replace_prefix_md(w))
+    w
+    |> replace_prefix_md()
+    |> replace_suffix_md()
   end
 
   defp replace_prefix_md(w) do
