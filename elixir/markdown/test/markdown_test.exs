@@ -19,13 +19,11 @@ defmodule MarkdownTest do
     assert Markdown.parse(input) == expected
   end
 
-
   test "mixed normal, italics and bold text" do
     input = "This will _be_ __mixed__"
     expected = "<p>This will <em>be</em> <strong>mixed</strong></p>"
     assert Markdown.parse(input) == expected
   end
-
 
   test "with h1 header level" do
     input = "# This will be an h1"
@@ -33,13 +31,11 @@ defmodule MarkdownTest do
     assert Markdown.parse(input) == expected
   end
 
-
   test "with h2 header level" do
     input = "## This will be an h2"
     expected = "<h2>This will be an h2</h2>"
     assert Markdown.parse(input) == expected
   end
-
 
   test "with h6 header level" do
     input = "###### This will be an h6"
@@ -47,13 +43,11 @@ defmodule MarkdownTest do
     assert Markdown.parse(input) == expected
   end
 
-
   test "unordered lists" do
     input = "* Item 1\n* Item 2"
     expected = "<ul><li>Item 1</li><li>Item 2</li></ul>"
     assert Markdown.parse(input) == expected
   end
-
 
   test "with a little bit of everything" do
     input = "# Header!\n* __Bold Item__\n* _Italic Item_"
