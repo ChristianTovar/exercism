@@ -6,7 +6,7 @@ defmodule Prime do
   def nth(0), do: raise(ArgumentError, message: "the argument value is invalid")
   def nth(count), do: find_prime_number(count, 2, 0)
 
-  defp find_prime_number(target, acc, nth) when target == nth, do: acc - 1
+  defp find_prime_number(target, acc, target), do: acc - 1
 
   defp find_prime_number(target, acc, nth) do
     case prime?(acc) do
