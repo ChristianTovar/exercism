@@ -11,8 +11,8 @@ defmodule Markdown do
     "<h1>Header!</h1><ul><li><em>Bold Item</em></li><li><i>Italic Item</i></li></ul>"
   """
   @spec parse(String.t()) :: String.t()
-  def parse(m) do
-    m
+  def parse(markdown) do
+    markdown
     |> String.split("\n")
     |> Enum.map(&process/1)
     |> Enum.join()
@@ -21,12 +21,12 @@ defmodule Markdown do
 
   defp process(t) do
     cond do
-      String.starts_with?(t, "#") ->
+      header?(t) ->
         t
         |> parse_header_md_level()
         |> enclose_with_header_tag()
 
-      String.starts_with?(t, "*") ->
+      emphasis?(t) ->
         parse_list_md_level(t)
 
       true ->
@@ -35,6 +35,10 @@ defmodule Markdown do
         |> enclose_with_paragraph_tag()
     end
   end
+
+  defp header?(string), do: String.starts_with?(string, "#")
+
+  defp emphasis?(string), do: String.starts_with?(string, "*")
 
   defp parse_header_md_level(hwt) do
     [header, string] = String.split(hwt, " ", parts: 2)
