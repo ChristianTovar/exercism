@@ -14,25 +14,20 @@ defmodule Markdown do
   def parse(markdown) do
     markdown
     |> String.split("\n")
-    |> Enum.map(&process/1)
-    |> Enum.join()
-    |> patch()
+    |> Enum.map_join(&parse_element/1)
+    |> replace_list_tags()
   end
 
-  defp process(t) do
+  defp parse_element(text) do
     cond do
-      header?(t) ->
-        t
-        |> parse_header_md_level()
-        |> enclose_with_header_tag()
+      header?(text) ->
+        parse_header(text)
 
-      emphasis?(t) ->
-        parse_list_md_level(t)
+      emphasis?(text) ->
+        parse_list_md_level(text)
 
       true ->
-        t
-        |> String.split()
-        |> enclose_with_paragraph_tag()
+        parse_normal_text(text)
     end
   end
 
@@ -40,64 +35,81 @@ defmodule Markdown do
 
   defp emphasis?(string), do: String.starts_with?(string, "*")
 
-  defp parse_header_md_level(hwt) do
-    [header, string] = String.split(hwt, " ", parts: 2)
+  defp parse_header(header) do
+    header
+    |> parse_header_md_level()
+    |> enclose_with_header_tag()
+  end
+
+  defp parse_header_md_level(header_with_text) do
+    [hashes, text] = String.split(header_with_text, " ", parts: 2)
 
     header_size =
-      header
+      hashes
       |> String.length()
       |> to_string()
 
-    {header_size, string}
+    {header_size, text}
   end
 
-  defp parse_list_md_level(l) do
-    t =
-      l
+  defp enclose_with_header_tag({size, text}), do: "<h#{size}>#{text}</h#{size}>"
+
+  defp parse_list_md_level(list) do
+    tags =
+      list
       |> String.trim_leading("* ")
       |> String.split()
 
-    "<li>" <> join_words_with_tags(t) <> "</li>"
+    "<li>" <> join_words_with_tags(tags) <> "</li>"
   end
 
-  defp enclose_with_header_tag({hl, htl}) do
-    "<h" <> hl <> ">" <> htl <> "</h" <> hl <> ">"
-  end
+  defp join_words_with_tags(tags), do: Enum.map_join(tags, " ", &replace_md_with_tag/1)
 
-  defp enclose_with_paragraph_tag(t) do
-    "<p>#{join_words_with_tags(t)}</p>"
-  end
-
-  defp join_words_with_tags(t) do
-    t
-    |> Enum.map(&replace_md_with_tag/1)
-    |> Enum.join(" ")
-  end
-
-  defp replace_md_with_tag(w) do
-    w
+  defp replace_md_with_tag(string) do
+    string
     |> replace_prefix_md()
     |> replace_suffix_md()
   end
 
-  defp replace_prefix_md(w) do
+  defp replace_prefix_md(string) do
     cond do
-      w =~ ~r/^#{"__"}{1}/ -> String.replace(w, ~r/^#{"__"}{1}/, "<strong>", global: false)
-      w =~ ~r/^[#{"_"}{1}][^#{"_"}+]/ -> String.replace(w, ~r/_/, "<em>", global: false)
-      true -> w
+      starting_strong_emphasis?(string) ->
+        String.replace(string, ~r/^#{"__"}{1}/, "<strong>", global: false)
+
+      starting_weak_emphasis?(string) ->
+        String.replace(string, ~r/_/, "<em>", global: false)
+
+      true ->
+        string
     end
   end
 
-  defp replace_suffix_md(w) do
+  defp replace_suffix_md(string) do
     cond do
-      w =~ ~r/#{"__"}{1}$/ -> String.replace(w, ~r/#{"__"}{1}$/, "</strong>")
-      w =~ ~r/[^#{"_"}{1}]/ -> String.replace(w, ~r/_/, "</em>")
-      true -> w
+      ending_strong_emphasis?(string) -> String.replace(string, ~r/#{"__"}{1}$/, "</strong>")
+      ending_weak_emphasis?(string) -> String.replace(string, ~r/_/, "</em>")
+      true -> string
     end
   end
 
-  defp patch(l) do
-    l
+  defp starting_strong_emphasis?(string), do: String.starts_with?(string, "__")
+
+  defp starting_weak_emphasis?(string), do: String.starts_with?(string, "_")
+
+  defp ending_strong_emphasis?(string), do: String.ends_with?(string, "__")
+
+  defp ending_weak_emphasis?(string), do: String.ends_with?(string, "_")
+
+  defp parse_normal_text(string) do
+    string
+    |> String.split()
+    |> enclose_with_paragraph_tag()
+  end
+
+  defp enclose_with_paragraph_tag(text), do: "<p>#{join_words_with_tags(text)}</p>"
+
+  defp replace_list_tags(line) do
+    line
     |> String.replace("<li>", "<ul>" <> "<li>", global: false)
     |> String.replace_suffix("</li>", "</li>" <> "</ul>")
   end
