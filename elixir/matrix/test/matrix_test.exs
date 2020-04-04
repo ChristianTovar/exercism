@@ -36,7 +36,6 @@ defmodule MatrixTest do
            ]
   end
 
-  @tag :pending
   test "column should return list at index" do
     matrix = Matrix.from_string(@input)
 

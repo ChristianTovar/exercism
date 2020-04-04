@@ -46,7 +46,16 @@ defmodule Matrix do
   """
   @spec columns(matrix :: %Matrix{}) :: list(list(integer))
   def columns(matrix) do
-    rows(matrix)
+    matrix
+    |> rows()
+    |> transpose()
+  end
+
+  def transpose(matrix) do
+    transposed_list =
+      for row <- 0..2, column <- 0..2, do: matrix |> Enum.at(column) |> Enum.at(row)
+
+    Enum.chunk_every(transposed_list, 3)
   end
 
   @doc """
@@ -54,5 +63,8 @@ defmodule Matrix do
   """
   @spec column(matrix :: %Matrix{}, index :: integer) :: list(integer)
   def column(matrix, index) do
+    matrix
+    |> columns()
+    |> Enum.at(index)
   end
 end
