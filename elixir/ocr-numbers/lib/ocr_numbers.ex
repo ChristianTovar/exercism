@@ -7,28 +7,33 @@ defmodule OcrNumbers do
   def convert(input) do
     input
     |> Enum.map(&String.graphemes/1)
-    |> convert_for_orientation([])
+    |> do_convertion("")
   end
 
-  defp convert_for_orientation([[], [], [], []], [acc]), do: {:ok, acc}
+  defp do_convertion([[], [], [], []], acc), do: {:ok, acc}
 
-  defp convert_for_orientation([a, b, c, d], acc) do
-    {ha, ta} = Enum.split(a, 3) |> IO.inspect()
+  defp do_convertion([[], [], [], [] | tail], acc),
+    do: do_convertion(tail, acc <> ",")
+
+  defp do_convertion([a, b, c, d | tail], acc) do
+    {ha, ta} = Enum.split(a, 3)
     {hb, tb} = Enum.split(b, 3)
     {hc, tc} = Enum.split(c, 3)
     {hd, td} = Enum.split(d, 3)
 
-      [ha, hb, hc, hd]
-      |> Enum.map(&Enum.join/1)
-      |> convert_digit()
-      |> case  do
-        {:ok, digit}  -> convert_for_orientation([ta, tb, tc, td], [digit | acc])
-
-        error -> error
-      end
+    case obtain_digit([ha, hb, hc, hd]) do
+      {:ok, digit} -> do_convertion([ta, tb, tc, td | tail], acc <> digit)
+      {:error, message} -> {:error, message}
+    end
   end
 
-  defp convert_for_orientation(_, _), do: {:error, 'invalid line count'}
+  defp do_convertion(_, _), do: {:error, 'invalid line count'}
+
+  defp obtain_digit(list) do
+    list
+    |> Enum.map(&Enum.join/1)
+    |> convert_digit()
+  end
 
   defp convert_digit([
          " _ ",
