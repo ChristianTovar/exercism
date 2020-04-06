@@ -31,14 +31,14 @@ defmodule LinkedList do
   """
   @spec peek(t) :: {:ok, any()} | {:error, :empty_list}
   def peek([]), do: {:error, :empty_list}
-  def peek([h | t]), do: {:ok, h}
+  def peek([h | _t]), do: {:ok, h}
 
   @doc """
   Get tail of a LinkedList
   """
   @spec tail(t) :: {:ok, t} | {:error, :empty_list}
   def tail([]), do: {:error, :empty_list}
-  def tail([h | t]), do: {:ok, t}
+  def tail([_h | t]), do: {:ok, t}
 
   @doc """
   Remove the head from a LinkedList
