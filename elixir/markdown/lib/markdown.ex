@@ -18,22 +18,9 @@ defmodule Markdown do
     |> replace_list_tags()
   end
 
-  defp parse_element(text) do
-    cond do
-      header?(text) ->
-        parse_header(text)
-
-      emphasis?(text) ->
-        parse_list_md_level(text)
-
-      true ->
-        parse_normal_text(text)
-    end
-  end
-
-  defp header?(string), do: String.starts_with?(string, "#")
-
-  defp emphasis?(string), do: String.starts_with?(string, "*")
+  defp parse_element(text = "#" <> _), do: parse_header(text)
+  defp parse_element(text = "*" <> _), do: parse_list_md_level(text)
+  defp parse_element(text), do: parse_normal_text(text)
 
   defp parse_header(header) do
     header
