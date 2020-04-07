@@ -19,10 +19,7 @@ defmodule Matrix do
   Given a `matrix`, return its rows as a list of lists of integers.
   """
   @spec rows(matrix :: %Matrix{}) :: list(list(integer))
-  def rows(matrix) do
-    matrix
-    |> Enum.map(&to_integers/1)
-  end
+  def rows(matrix), do: Enum.map(matrix, &to_integers/1)
 
   defp to_integers(row) do
     row
@@ -52,10 +49,12 @@ defmodule Matrix do
   end
 
   def transpose(matrix) do
-    transposed_list =
-      for row <- 0..2, column <- 0..2, do: matrix |> Enum.at(column) |> Enum.at(row)
+    size = Enum.count(matrix) - 1
 
-    Enum.chunk_every(transposed_list, 3)
+    transposed_list =
+      for row <- 0..size, column <- 0..size, do: matrix |> Enum.at(column) |> Enum.at(row)
+
+    Enum.chunk_every(transposed_list, size + 1)
   end
 
   @doc """
