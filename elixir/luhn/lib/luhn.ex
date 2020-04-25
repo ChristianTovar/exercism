@@ -30,8 +30,7 @@ defmodule Luhn do
   defp reject_initial_zero([0 | tail]), do: tail
   defp reject_initial_zero(list), do: list
 
-  defp double_digits([]), do: false
-  defp double_digits([_]), do: false
+  defp double_digits(list) when length(list) < 2, do: false
 
   defp double_digits(list) do
     list
