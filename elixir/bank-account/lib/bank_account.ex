@@ -15,11 +15,9 @@ defmodule BankAccount do
   def init(_state), do: {:ok, %{balance: 0}}
 
   @impl true
-  def handle_call(:balance, _from, {:error, :account_closed} = state), do: {:reply, state, state}
-  def handle_call(:balance, _from, %{balance: amount} = state), do: {:reply, amount, state}
+  def handle_call(_, _from, {:error, :account_closed} = state), do: {:reply, state, state}
 
-  def handle_call({:update, _extra_cash}, _from, {:error, :account_closed} = state),
-    do: {:reply, state, state}
+  def handle_call(:balance, _from, %{balance: amount} = state), do: {:reply, amount, state}
 
   def handle_call({:update, extra_cash}, _from, %{balance: amount} = state),
     do: {:reply, :ok, %{state | balance: amount + extra_cash}}
