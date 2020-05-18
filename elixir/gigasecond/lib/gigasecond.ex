@@ -5,7 +5,7 @@ defmodule Gigasecond do
   @spec from({{pos_integer, pos_integer, pos_integer}, {pos_integer, pos_integer, pos_integer}}) ::
           :calendar.datetime()
 
-  def from({{year, month, day}, {hours, minutes, seconds}} = date) do
+  def from({{_year, _month, _day}, {_hours, _minutes, _seconds}} = date) do
     date
     |> :calendar.datetime_to_gregorian_seconds()
     |> Kernel.+(1000000000)
