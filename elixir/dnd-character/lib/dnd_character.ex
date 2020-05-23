@@ -14,7 +14,6 @@ defmodule DndCharacter do
   @spec modifier(pos_integer()) :: integer()
   def modifier(score) do
     score
-    |> IO.inspect()
     |> Kernel.-(10)
     |> Kernel./(2)
     |> Float.floor()
@@ -23,8 +22,27 @@ defmodule DndCharacter do
 
   @spec ability :: pos_integer()
   def ability do
+    1..4
+    |> Enum.map(fn _ -> :rand.uniform(6) end)
+    |> Enum.sort()
+    |> add_rolls()
   end
 
   @spec character :: t()
-  def character, do:
+  def character do
+    %{constitution: value} = character = create_random_character()
+    %__MODULE__{character | hitpoints: 10 + modifier(value)}
+  end
+
+  defp create_random_character,
+    do: %__MODULE__{
+      strength: ability(),
+      dexterity: ability(),
+      constitution: ability(),
+      intelligence: ability(),
+      wisdom: ability(),
+      charisma: ability()
+    }
+
+  defp add_rolls([_smallest | tail]), do: Enum.sum(tail)
 end

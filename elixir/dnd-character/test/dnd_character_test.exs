@@ -8,22 +8,18 @@ defmodule DndCharacterTest do
       assert modifier(3) === -4
     end
 
-    @tag :pending
     test "for score 4 is -3" do
       assert modifier(4) === -3
     end
 
-    @tag :pending
     test "for score 5 is -3" do
       assert modifier(5) === -3
     end
 
-    @tag :pending
     test "for score 6 is -2" do
       assert modifier(6) === -2
     end
 
-    @tag :pending
     test "for score 7 is -2" do
       assert modifier(7) === -2
     end
@@ -74,7 +70,6 @@ defmodule DndCharacterTest do
   end
 
   describe "random ability" do
-    @tag :pending
     test "is within range" do
       Enum.each(1..200, fn _ -> assert ability() in 3..18 end)
     end
@@ -85,12 +80,10 @@ defmodule DndCharacterTest do
       %{character: character()}
     end
 
-    @tag :pending
     test "has valid hitpoints", %{character: character} do
       assert character.hitpoints === 10 + modifier(character.constitution)
     end
 
-    @tag :pending
     test "has each ability only calculated once", %{character: character} do
       assert character.strength === character.strength
     end
