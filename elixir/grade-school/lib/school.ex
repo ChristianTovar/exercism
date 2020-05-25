@@ -15,20 +15,11 @@ defmodule School do
   Return the names of the students in a particular grade.
   """
   @spec grade(map, integer) :: [String.t()]
-  def grade(db, grade), do: return_grade(db[grade])
+  def grade(db, grade), do: Map.get(db, grade, [])
 
   @doc """
   Sorts the school by grade and name.
   """
   @spec sort(map) :: [{integer, [String.t()]}]
-  def sort(db) do
-    db
-    |> Map.keys()
-    |> Enum.map(&sort_children(db, &1))
-  end
-
-  defp return_grade(nil), do: []
-  defp return_grade(list), do: list
-
-  defp sort_children(db, grade), do: {grade, Enum.sort(db[grade])}
+  def sort(db), do: Enum.map(db, fn {grade, students} -> {grade, Enum.sort(students)} end)
 end
