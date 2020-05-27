@@ -12,13 +12,7 @@ defmodule DndCharacter do
   defstruct ~w[strength dexterity constitution intelligence wisdom charisma hitpoints]a
 
   @spec modifier(pos_integer()) :: integer()
-  def modifier(score) do
-    score
-    |> Kernel.-(10)
-    |> Kernel./(2)
-    |> Float.floor()
-    |> trunc()
-  end
+  def modifier(score), do: Integer.floor_div(score - 10, 2)
 
   @spec ability :: pos_integer()
   def ability do
