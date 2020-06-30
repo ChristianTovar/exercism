@@ -1,7 +1,7 @@
 defmodule Forth do
   import String, only: [to_integer: 1]
 
-  @opaque evaluator :: any
+  @opaque evaluator :: map()
   @integer_arithmetic ~W(- + * /)
   @stack_manipulation ~W(DUP dup drop swap over)
 
