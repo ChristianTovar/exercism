@@ -4,43 +4,23 @@ defmodule AllYourBase do
   or returns nil if either of the bases are less than 2
   """
 
-  @spec convert(list, integer, integer) :: list
-  def convert(digits, base_a, base_b) do
-    size = Enum.count(digits) - 1
+  @spec convert(list, integer, integer) :: list | nil
+  def convert([], _base_a, _base_b), do: nil
+  def convert(_digits, base_a, base_b) when base_a < 2 or base_b < 2, do: nil
 
-    digits
-    |> Enum.zip(size..0)
-    |> Enum.map(fn {bit, value} -> bit * pow(base_a, value) end)
-    |> sum(base_b)
-    |> format(base_b)
+  def convert(digits, base_a, 10) do
+    position = length(digits) - 1
+
+    to_decimal(digits, position, base_a, 0)
   end
 
-  def convert(digits, 10, 2) do
-  end
+  defp to_decimal([], _position, _base, acc), do: Integer.digits(acc)
 
-  defp pow(x, y), do: :math.pow(x, y) |> trunc()
+  defp to_decimal([h | t], position, 2, acc) when h in [0, 1],
+    do: to_decimal(t, position - 1, 2, acc + h * trunc(:math.pow(2, position)))
 
-  defp sum(values, 2), do: values
-  defp sum(values, _), do: Enum.sum(values)
+  defp to_decimal([h | _t], _position, 2, _acc) when h not in [0, 1], do: nil
 
-  defp format(value, 10) when value < 10, do: [value]
-
-  defp format(value, 10) do
-    value
-    |> Integer.to_string()
-    |> String.graphemes()
-    |> Enum.map(&String.to_integer/1)
-  end
-
-  defp format(value, _), do: value
-
-  defp divide() do
-    
-  end
-
-  defp divide(number, acc) do
-    result = div(number, 2)
-    remainder = rem(number, 2)
-    divide(result, [remainder | acc])
-  end
+  defp to_decimal([h | t], position, base, acc),
+    do: to_decimal(t, position - 1, base, acc + h * trunc(:math.pow(base, position)))
 end
