@@ -21,17 +21,14 @@ defmodule AllYourBaseTest do
     assert AllYourBase.convert([4, 2], 10, 2) == [1, 0, 1, 0, 1, 0]
   end
 
-  @tag :pending
   test "convert trinary to hexadecimal" do
     assert AllYourBase.convert([1, 1, 2, 0], 3, 16) == [2, 10]
   end
 
-  @tag :pending
   test "convert hexadecimal to trinary" do
     assert AllYourBase.convert([2, 10], 16, 3) == [1, 1, 2, 0]
   end
 
-  @tag :pending
   test "convert 15-bit integer" do
     assert AllYourBase.convert([3, 46, 60], 97, 73) == [6, 10, 45]
   end
@@ -72,7 +69,6 @@ defmodule AllYourBaseTest do
     assert AllYourBase.convert([1, 2, 1, 0, 1, 0], 2, 10) == nil
   end
 
-  @tag :pending
   test "convert second base is one" do
     assert AllYourBase.convert([1, 0, 1, 0, 1, 0], 2, 1) == nil
   end
@@ -81,12 +77,10 @@ defmodule AllYourBaseTest do
     assert AllYourBase.convert([7], 10, 0) == nil
   end
 
-  @tag :pending
   test "convert second base is negative" do
     assert AllYourBase.convert([1], 2, -7) == nil
   end
 
-  @tag :pending
   test "convert both bases are negative" do
     assert AllYourBase.convert([1], -2, -7) == nil
   end

@@ -16,6 +16,12 @@ defmodule AllYourBase do
 
   def convert(digits, 10, base_b), do: from_decimal(Integer.undigits(digits), base_b, [])
 
+  def convert(digits, base_a, base_b) do
+    digits
+    |> convert(base_a, 10)
+    |> convert(10, base_b)
+  end
+
   defp to_decimal([], _position, _base, acc), do: Integer.digits(acc)
 
   defp to_decimal([h | t], position, 2, acc) when h in [0, 1],
