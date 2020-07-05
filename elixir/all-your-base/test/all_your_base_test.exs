@@ -9,7 +9,6 @@ defmodule AllYourBaseTest do
     assert AllYourBase.convert([1, 0, 1], 2, 10) == [5]
   end
 
-  @tag :pending
   test "convert single decimal to binary" do
     assert AllYourBase.convert([5], 10, 2) == [1, 0, 1]
   end
@@ -18,7 +17,6 @@ defmodule AllYourBaseTest do
     assert AllYourBase.convert([1, 0, 1, 0, 1, 0], 2, 10) == [4, 2]
   end
 
-  @tag :pending
   test "convert decimal to binary" do
     assert AllYourBase.convert([4, 2], 10, 2) == [1, 0, 1, 0, 1, 0]
   end
@@ -42,12 +40,10 @@ defmodule AllYourBaseTest do
     assert AllYourBase.convert([], 2, 10) == nil
   end
 
-  @tag :pending
   test "convert single zero" do
     assert AllYourBase.convert([0], 10, 2) == [0]
   end
 
-  @tag :pending
   test "convert multiple zeros" do
     assert AllYourBase.convert([0, 0, 0], 10, 2) == [0]
   end
@@ -81,7 +77,6 @@ defmodule AllYourBaseTest do
     assert AllYourBase.convert([1, 0, 1, 0, 1, 0], 2, 1) == nil
   end
 
-  @tag :pending
   test "convert second base is zero" do
     assert AllYourBase.convert([7], 10, 0) == nil
   end

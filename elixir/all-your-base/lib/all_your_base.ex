@@ -14,6 +14,8 @@ defmodule AllYourBase do
     to_decimal(digits, position, base_a, 0)
   end
 
+  def convert(digits, 10, base_b), do: from_decimal(Integer.undigits(digits), base_b, [])
+
   defp to_decimal([], _position, _base, acc), do: Integer.digits(acc)
 
   defp to_decimal([h | t], position, 2, acc) when h in [0, 1],
@@ -23,4 +25,10 @@ defmodule AllYourBase do
 
   defp to_decimal([h | t], position, base, acc),
     do: to_decimal(t, position - 1, base, acc + h * trunc(:math.pow(base, position)))
+
+  defp from_decimal(0, _base, []), do: [0]
+  defp from_decimal(0, _base, acc), do: acc
+
+  defp from_decimal(remainder, base, acc),
+    do: from_decimal(div(remainder, base), base, [rem(remainder, base) | acc])
 end
