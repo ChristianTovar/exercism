@@ -19,25 +19,22 @@ defmodule CustomSet do
 
   @spec subset?(t, t) :: boolean
   def subset?(%CustomSet{map: set_1}, %CustomSet{map: set_2}) do
-    map_set1 = Map.keys(set_1) |> MapSet.new()
-    map_set2 = Map.keys(set_2) |> MapSet.new()
+    keys_1 = Map.keys(set_1)
+    keys_2 = Map.keys(set_2)
 
-    MapSet.subset?(map_set1, map_set2)
+    Enum.all?(keys_1, &(&1 in keys_2))
   end
 
   @spec disjoint?(t, t) :: boolean
   def disjoint?(%CustomSet{map: set_1}, %CustomSet{map: set_2}) do
-    {map_set1, map_set2} = sets_from_maps(set_1, set_2)
+    keys_1 = Map.keys(set_1)
+    keys_2 = Map.keys(set_2)
 
-    MapSet.disjoint?(map_set1, map_set2)
+    Enum.all?(keys_1, &(&1 not in keys_2))
   end
 
   @spec equal?(t, t) :: boolean
-  def equal?(%CustomSet{map: set_1}, %CustomSet{map: set_2}) do
-    {map_set1, map_set2} = sets_from_maps(set_1, set_2)
-
-    MapSet.equal?(map_set1, map_set2)
-  end
+  def equal?(%CustomSet{map: set_1}, %CustomSet{map: set_2}), do: set_1 == set_2
 
   @spec add(t, any) :: t
   def add(%CustomSet{map: set}, element) do
@@ -48,45 +45,31 @@ defmodule CustomSet do
 
   @spec intersection(t, t) :: t
   def intersection(%CustomSet{map: set_1}, %CustomSet{map: set_2}) do
-    {map_set1, map_set2} = sets_from_maps(set_1, set_2)
+    keys_2 = Map.keys(set_2)
 
-    map_set1
-    |> MapSet.intersection(map_set2)
-    |> MapSet.to_list()
-    |> CustomSet.new()
+    set_1
+    |> Map.keys()
+    |> Enum.filter(&(&1 in keys_2))
+    |> new()
   end
 
   @spec difference(t, t) :: t
   def difference(%CustomSet{map: set_1}, %CustomSet{map: set_2}) do
-    {map_set1, map_set2} = sets_from_maps(set_1, set_2)
+    keys_2 = Map.keys(set_2)
 
-    map_set1
-    |> MapSet.difference(map_set2)
-    |> MapSet.to_list()
-    |> CustomSet.new()
+    set_1
+    |> Map.keys()
+    |> Enum.reject(&(&1 in keys_2))
+    |> new()
   end
 
   @spec union(t, t) :: t
   def union(%CustomSet{map: set_1}, %CustomSet{map: set_2}) do
-    {map_set1, map_set2} = sets_from_maps(set_1, set_2)
+    keys_1 = Map.keys(set_1)
+    keys_2 = Map.keys(set_2)
 
-    map_set1
-    |> MapSet.union(map_set2)
-    |> MapSet.to_list()
-    |> CustomSet.new()
-  end
-
-  defp sets_from_maps(custom_set_1, custom_set_2) do
-    map_set1 =
-      custom_set_1
-      |> Map.keys()
-      |> MapSet.new()
-
-    map_set2 =
-      custom_set_2
-      |> Map.keys()
-      |> MapSet.new()
-
-    {map_set1, map_set2}
+    (keys_1 ++ keys_2)
+    |> Enum.uniq()
+    |> new()
   end
 end
