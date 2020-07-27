@@ -22,7 +22,10 @@ defmodule CustomSet do
     keys_1 = Map.keys(set_1)
     keys_2 = Map.keys(set_2)
 
-    Enum.all?(keys_1, &(&1 in keys_2))
+    case keys_1 -- keys_2 do
+      [] -> true
+      _ -> false
+    end
   end
 
   @spec disjoint?(t, t) :: boolean
@@ -30,7 +33,10 @@ defmodule CustomSet do
     keys_1 = Map.keys(set_1)
     keys_2 = Map.keys(set_2)
 
-    Enum.all?(keys_1, &(&1 not in keys_2))
+    case keys_1 -- keys_2 do
+      ^keys_1 -> true
+      _ -> false
+    end
   end
 
   @spec equal?(t, t) :: boolean
