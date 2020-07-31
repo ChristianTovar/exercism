@@ -22,7 +22,7 @@ defmodule PerfectNumbers do
     |> determine_number(number)
   end
 
-  defp factors(number, number, acc), do: acc
+  defp factors(number, divisor, acc) when divisor > div(number, 2), do: acc
 
   defp factors(number, divisor, acc) when rem(number, divisor) == 0,
     do: factors(number, divisor + 1, [divisor | acc])
